@@ -42,7 +42,9 @@ class ProlyfixBankingBundle extends ModuleBundle
         // Your custom logic here
 
         $container->services()
-            ->set(ApobankXlsImporter::class, ApobankXlsImporter::class);
+            ->set(ApobankXlsImporter::class, ApobankXlsImporter::class)
+                                    ->autowire(true)
+                        ->autoconfigure(true);
         // Call the parent method at the end
         parent::loadExtension($config, $container, $builder);
     }
