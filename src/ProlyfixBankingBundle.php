@@ -39,12 +39,10 @@ class ProlyfixBankingBundle extends ModuleBundle
 
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        dump("ciasdkls");
         // Your custom logic here
 
         $container->services()
             ->set(ApobankXlsImporter::class, ApobankXlsImporter::class);
-        dump("ici");
         // Call the parent method at the end
         parent::loadExtension($config, $container, $builder);
     }
