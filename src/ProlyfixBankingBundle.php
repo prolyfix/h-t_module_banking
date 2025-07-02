@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Security\AuthorizationChecker;
 use Prolyfix\BankingBundle\Controller\Admin\EntryCrudController;
 use Prolyfix\BankingBundle\Entity\Account;
 use Prolyfix\BankingBundle\Entity\Entry;
+use Prolyfix\BankingBundle\Importer\ApobankXlsImporter;
 use Prolyfix\ChecklistBundle\Entity\Checklist;
 use Prolyfix\CrmBundle\Entity\Appointment;
 use Prolyfix\CrmBundle\Entity\Contact;
@@ -33,6 +34,19 @@ class ProlyfixBankingBundle extends ModuleBundle
             Account::class,
             Entry::class
         ];
+    }
+
+
+    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    {
+        dump("ciasdkls");
+        // Your custom logic here
+
+        $container->services()
+            ->set(ApobankXlsImporter::class, ApobankXlsImporter::class);
+        dump("ici");
+        // Call the parent method at the end
+        parent::loadExtension($config, $container, $builder);
     }
 
     const IS_MODULE = true;
@@ -84,6 +98,4 @@ class ProlyfixBankingBundle extends ModuleBundle
     {
         return [];
     }
-
-
 }
