@@ -7,6 +7,7 @@ use Prolyfix\BankingBundle\Entity\AccountType;
 use App\Module\ModuleBundle;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Security\AuthorizationChecker;
+use Prolyfix\BankingBundle\Controller\Admin\EntryCrudController;
 use Prolyfix\BankingBundle\Entity\Account;
 use Prolyfix\BankingBundle\Entity\Entry;
 use Prolyfix\ChecklistBundle\Entity\Checklist;
@@ -14,6 +15,8 @@ use Prolyfix\CrmBundle\Entity\Appointment;
 use Prolyfix\CrmBundle\Entity\Contact;
 use Prolyfix\CrmBundle\Entity\ThirdParty;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ProlyfixBankingBundle extends ModuleBundle
@@ -24,7 +27,26 @@ class ProlyfixBankingBundle extends ModuleBundle
     {
         $this->authorizationChecker = $authorizationChecker;
     }
+    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
+    {
+        dump($config);
+        $container->import('../config/services.yaml');
+            if (class_exists(EntryCrudController::class)) { // Replace with one of your actual controller class names
+        dump('MyBankingController class exists.');
+    } else {
+        dump('MyBankingController class does NOT exist at that FQCN.');
+    }
 
+    // Try to check if a service from your bundle is registered (e.g., a controller)
+    // This will only work if the service definition itself is already processed
+    // For auto-configured services, the FQCN is usually the service ID.
+    if ($builder->hasDefinition(EntryCrudController::class)) {
+         dump('MyBankingController service definition exists in container.');
+    } else {
+         dump('MyBankingController service definition NOT found in container yet.');
+    }
+
+    }
     public static function getTables(): array
     {
         return [
