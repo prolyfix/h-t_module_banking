@@ -1,0 +1,7 @@
+services:
+    Prolyfix\BankingBundle\Controller\:
+        resource: '../src/Controller/*'
+    Prolyfix\BankingBundle\Repository\:
+        resource: '../src/Repository/*'       
+    Prolyfix\BankingBundle\Importer\:
+        resource: '../src/Importer/*' 
