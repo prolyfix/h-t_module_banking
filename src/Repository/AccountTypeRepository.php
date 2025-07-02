@@ -1,6 +1,6 @@
 <?php
 
-namespace Prolyfix\BankingBundle\Entity;
+namespace Prolyfix\BankingBundle\Repository;
 
 use Prolyfix\BankingBundle\Entity\AccountType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
