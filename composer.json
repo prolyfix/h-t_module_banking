@@ -1,11 +1,11 @@
 {
     "name": "prolyfix/h-t_module_banking",
-    "description": "bundle which aim is to provide a cookie notification service",
+    "description": "Banking Bundle for Holiday and Time",
     "type": "symfony-bundle",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Prolyfix\\SymfonyCookieNotificationBundle\\": "src/"
+            "Prolyfix\\BankingBundle\\": "src/"
         }
     },
     "authors": [
