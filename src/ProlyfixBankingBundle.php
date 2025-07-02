@@ -27,26 +27,6 @@ class ProlyfixBankingBundle extends ModuleBundle
     {
         $this->authorizationChecker = $authorizationChecker;
     }
-    public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
-    {
-        dump($config);
-        $container->import('../config/services.yaml');
-            if (class_exists(EntryCrudController::class)) { // Replace with one of your actual controller class names
-        dump('MyBankingController class exists.');
-    } else {
-        dump('MyBankingController class does NOT exist at that FQCN.');
-    }
-
-    // Try to check if a service from your bundle is registered (e.g., a controller)
-    // This will only work if the service definition itself is already processed
-    // For auto-configured services, the FQCN is usually the service ID.
-    if ($builder->hasDefinition(EntryCrudController::class)) {
-         dump('MyBankingController service definition exists in container.');
-    } else {
-         dump('MyBankingController service definition NOT found in container yet.');
-    }
-
-    }
     public static function getTables(): array
     {
         return [
