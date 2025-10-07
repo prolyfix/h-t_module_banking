@@ -78,6 +78,7 @@ class ProlyfixBankingBundle extends ModuleBundle
 
     public function getMenuConfiguration(): array
     {
+        return [];
         $authorizationChecker = $this->authorizationChecker;
         if (!$authorizationChecker->isGranted('ROLE_ACCOUNTING')) {
             return [];
