@@ -63,7 +63,8 @@ class ApobankXlsImporter
                         $entry->{$values['function']}($input[$key]);
                         break;
                     case 'float':
-                        $amount = str_replace(',', '.', $input[$key]);
+                        $amount = str_replace('.', '', $input[$key]);
+                        $amount = str_replace(',', '.', $amount);
                         $entry->{$values['function']}((float)$amount);
                         break;
                     default:
