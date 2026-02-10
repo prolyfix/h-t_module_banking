@@ -258,9 +258,9 @@ CHANGELOG
    Before:
 
    ```php
-   namespace App\Controller;
+   namespace Prolyfix\HolidayAndTime\Controller;
 
-   use App\Mailer;
+   use Prolyfix\HolidayAndTime\Mailer;
 
    class DefaultController
    {
@@ -273,7 +273,7 @@ CHANGELOG
    ```
    ```yml
    services:
-       App\Controller\DefaultController:
+       Prolyfix\HolidayAndTime\Controller\DefaultController:
            autowire: true
    ```
 
@@ -284,14 +284,14 @@ CHANGELOG
    ```
    ```yml
    services:
-       App\Controller\DefaultController:
+       Prolyfix\HolidayAndTime\Controller\DefaultController:
            autowire: true
 
        # or
-       # App\Controller\DefaultController:
-       #     arguments: { $mailer: "@App\Mailer" }
+       # Prolyfix\HolidayAndTime\Controller\DefaultController:
+       #     arguments: { $mailer: "@Prolyfix\HolidayAndTime\Mailer" }
 
-       App\Mailer:
+       Prolyfix\HolidayAndTime\Mailer:
            autowire: true
     ```
  * removed autowiring services based on the types they implement

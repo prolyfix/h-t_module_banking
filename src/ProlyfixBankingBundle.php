@@ -2,9 +2,9 @@
 
 namespace Prolyfix\BankingBundle;
 
-use App\Entity\Module\ModuleRight;
+use Prolyfix\HolidayAndTime\Entity\Module\ModuleRight;
 use Prolyfix\BankingBundle\Entity\AccountType;
-use App\Module\ModuleBundle;
+use Prolyfix\HolidayAndTime\Module\ModuleBundle;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Security\AuthorizationChecker;
 use Prolyfix\BankingBundle\Controller\Admin\EntryCrudController;

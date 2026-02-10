@@ -2,7 +2,7 @@
 
 namespace Prolyfix\BankingBundle\Controller\Admin;
 
-use App\Controller\Admin\BaseCrudController;
+use Prolyfix\HolidayAndTime\Controller\Admin\BaseCrudController;
 use Prolyfix\BankingBundle\Entity\Account;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;

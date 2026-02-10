@@ -2,7 +2,7 @@
 
 namespace Prolyfix\BankingBundle\Entity;
 
-use App\Entity\TimeData;
+use Prolyfix\HolidayAndTime\Entity\TimeData;
 use Prolyfix\BankingBundle\Repository\AccountRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

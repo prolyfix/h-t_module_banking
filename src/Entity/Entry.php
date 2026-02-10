@@ -2,7 +2,7 @@
 
 namespace Prolyfix\BankingBundle\Entity;
 
-use App\Entity\Commentable;
+use Prolyfix\HolidayAndTime\Entity\Commentable;
 use Prolyfix\BankingBundle\Repository\EntryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
