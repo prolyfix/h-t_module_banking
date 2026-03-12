@@ -10,56 +10,92 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use PHPUnit\Util\Json;
 use Prolyfix\BankingBundle\Form\ImporterTypeForm;
-use Prolyfix\BankingBundle\Importer\ApobankXlsImporter;
+use Prolyfix\BankingBundle\Importer\BankImporterInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class EntryCrudController extends AbstractCrudController
 {
+    /**
+     * @param iterable<BankImporterInterface> $importers All tagged bank importers
+     */
+    public function __construct(private iterable $importers = [])
+    {
+    }
+
     public static function getEntityFqcn(): string
     {
         return Entry::class;
     }
-    public function import(Request $request, ApobankXlsImporter $importer):Response
+
+    /**
+     * Resolves an importer by its name as submitted via the form.
+     */
+    private function resolveImporter(string $name): ?BankImporterInterface
+    {
+        foreach ($this->importers as $importer) {
+            if ($importer->getName() === $name) {
+                return $importer;
+            }
+        }
+        return null;
+    }
+
+    public function import(Request $request): Response
     {
         $form = $this->createForm(ImporterTypeForm::class);
         $form->handleRequest($request);
-        if($form->isSubmitted() and $form->isValid())
-        {
-            $file = $request->files->get('importer_type_form')['media'];
-            $bank = $form->get('bankAccount')->getData();
-            if(!$file)
-            {
-                return new JsonResponse([
-                    'status' => 'error',
-                    'message' => 'No file uploaded'
-                ]);
-            }
-            if(!$importer->isFormatAllowed($file)){
-                return new JsonResponse([
-                    'status' => 'error',
-                    'message' => 'File format not allowed'
-                ]);
-            }
-            if(!$importer->isFileRight($file)){
-                return new JsonResponse([
-                    'status' => 'error',
-                    'message' => 'File is not right'
-                ]);
-            }
-            $imported = $importer->import($file,$bank, true);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $importerName = $form->get('typeOfImport')->getData();
+            $bank         = $form->get('bankAccount')->getData();
+            $importer     = $this->resolveImporter($importerName);
+
+            if ($importer === null) {
+                return new JsonResponse([
+                    'status'  => 'error',
+                    'message' => 'Unknown importer: ' . $importerName,
+                ]);
+            }
+
+            if ($importer->getImportMode() === BankImporterInterface::IMPORT_MODE_FILE) {
+                $file = $request->files->get('importer_type_form')['media'] ?? null;
+
+                if (!$file) {
+                    return new JsonResponse([
+                        'status'  => 'error',
+                        'message' => 'No file uploaded',
+                    ]);
+                }
+
+                if (!$importer->isFormatAllowed($file->getClientOriginalExtension())) {
+                    return new JsonResponse([
+                        'status'  => 'error',
+                        'message' => 'File format not allowed',
+                    ]);
+                }
+
+                if (!$importer->isFileRight($file)) {
+                    return new JsonResponse([
+                        'status'  => 'error',
+                        'message' => 'File is not valid',
+                    ]);
+                }
+
+                $importer->import($file, $bank, true);
+            } else {
+                // API-based importer: no file is required – trigger the import directly.
+                $importer->import(null, $bank, true);
+            }
         }
+
         return $this->render('common/simpleForm.html.twig', [
-            'form' => $form->createView()
-        ]);   
+            'form' => $form->createView(),
+        ]);
     }
 
     public function configureActions(Actions $actions): Actions

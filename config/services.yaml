@@ -2,6 +2,20 @@ services:
     Prolyfix\BankingBundle\Controller\:
         resource: '../src/Controller/*'
     Prolyfix\BankingBundle\Repository\:
-        resource: '../src/Repository/*'       
+        resource: '../src/Repository/*'
     Prolyfix\BankingBundle\Importer\:
-        resource: '../src/Importer/*' 
+        resource: '../src/Importer/*'
+        exclude:
+            - '../src/Importer/BankImporterInterface.php'
+            - '../src/Importer/AbstractApiImporter.php'
+        tags: ['prolyfix.bank_importer']
+
+    Prolyfix\BankingBundle\Controller\Admin\EntryCrudController:
+        arguments:
+            $importers: !tagged_iterator prolyfix.bank_importer
+
+    Prolyfix\BankingBundle\Form\ImporterTypeForm:
+        arguments:
+            $importers: !tagged_iterator prolyfix.bank_importer
+        tags: ['form.type']
+ 

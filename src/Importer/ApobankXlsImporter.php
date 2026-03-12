@@ -3,15 +3,13 @@
 namespace Prolyfix\BankingBundle\Importer;
 
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 use Prolyfix\BankingBundle\Entity\Account;
 use Prolyfix\BankingBundle\Entity\Entry;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
-class ApobankXlsImporter
+class ApobankXlsImporter implements BankImporterInterface
 {
 
     private const ALLOW_FORMAT = ['csv'];
@@ -22,31 +20,37 @@ class ApobankXlsImporter
         'Betrag (EUR)' => ['function'=>'setAmount', 'transform' => 'float'],
     ];
 
-    public function __construct(private EntityManagerInterface $em, SerializerInterface $serializer)
+    public function __construct(private EntityManagerInterface $em)
     {
-        // Constructor to inject dependencies
+    }
+
+    public function getName(): string
+    {
+        return 'apobank_xls';
+    }
+
+    public function getImportMode(): string
+    {
+        return BankImporterInterface::IMPORT_MODE_FILE;
     }
 
     public function isFormatAllowed(string $format): bool
     {
-        return true;
+        return in_array(strtolower($format), self::ALLOW_FORMAT, true);
     }
 
-    public function isFileRight($file): bool
+    public function isFileRight(mixed $file): bool
     {
         return true;
     }
 
-    public function deserialize($file): array
+    public function deserialize(mixed $file): array
     {
-
-        $output = [];
         $csvData = $this->readCsvFile($file);
-        $deserializedData = $this->deserializeCsv($csvData);
-        return $deserializedData;
+        return $this->deserializeCsv($csvData);
     }
 
-    private function createEntity($input, Account $account): Entry
+    private function createEntity(array $input, Account $account): Entry
     {
         $entry = new Entry();
         $entry->setBank($account);
@@ -75,7 +79,7 @@ class ApobankXlsImporter
         return $entry;
     }
 
-    public function import($file,Account $account, bool $write = true): array
+    public function import(mixed $file, Account $account, bool $write = true): array
     {
         $output = [];
         $normalized = $this->deserialize($file);
